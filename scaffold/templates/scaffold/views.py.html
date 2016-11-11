@@ -1,0 +1,123 @@
+{% load scaffold_tags %}{% emptylineless %}
+from django.core.urlresolvers import reverse
+from django.views.generic import TemplateView
+from django.views.generic import (
+    ListView,
+    DetailView,
+    CreateView,
+    DeleteView,
+    UpdateView,
+    ArchiveIndexView,
+    DateDetailView,
+    DayArchiveView,
+    MonthArchiveView,
+    TodayArchiveView,
+    WeekArchiveView,
+    YearArchiveView,
+)
+
+from models import (
+{% for obj in items %}
+    {{ obj.model_name }},
+{% endfor %}
+)
+{% endemptylineless %}
+
+
+class IndexView(TemplateView):
+    template_name = "webapp/index.html"
+
+
+# {{ obj.model_name }} generic (crud) views
+
+{% for obj in items %}
+class {{ obj.model_name }}Mixin(object):
+    model = {{ obj.model_name }}
+
+
+class {{ obj.model_name }}BaseListView({{ obj.model_name }}Mixin):
+    paginate_by = 10
+
+
+{% emptylineless %}
+class {{ obj.model_name }}CreateView({{ obj.model_name }}Mixin, CreateView):
+    fields = [
+        {% for field in obj.concrete_fields %}
+        '{{ field }}',
+        {% endfor %}
+    ]
+{% endemptylineless %}
+
+    def get_success_url(self):
+        return reverse('webapp:{{ obj.url_name }}_list')
+
+
+class {{ obj.model_name }}DetailView({{ obj.model_name }}Mixin, DetailView):
+    pass
+
+
+class {{ obj.model_name }}ListView({{ obj.model_name }}BaseListView, ListView):
+    pass
+
+
+{% emptylineless %}
+class {{ obj.model_name }}UpdateView({{ obj.model_name }}Mixin, UpdateView):
+    fields = [
+    {% for field in obj.concrete_fields %}
+        '{{ field }}',
+    {% endfor %}
+    ]
+{% endemptylineless %}
+
+    def get_success_url(self):
+        return reverse('webapp:{{ obj.url_name }}_list')
+
+
+class {{ obj.model_name }}DeleteView({{ obj.model_name }}Mixin, DeleteView):
+    def get_success_url(self):
+        return reverse('webapp:{{ obj.url_name }}_list')
+
+
+# {{ obj.model_name }} generic dates
+{% if obj.date_fields %}
+{% emptylineless %}
+class {{ obj.model_name }}DateView({{ obj.model_name }}Mixin):
+{% for date_field in obj.date_fields %}
+{% if forloop.first %}
+    date_field = '{{ date_field }}'
+{% else %}
+    # date_field = '{{ date_field }}'
+{% endif %}
+{% endfor %}
+    month_format = '%m'
+{% endemptylineless %}
+
+
+class {{ obj.model_name }}ArchiveIndexView({{ obj.model_name }}DateView, {{ obj.model_name }}BaseListView, ArchiveIndexView):
+    pass
+
+
+class {{ obj.model_name }}DateDetailView({{ obj.model_name }}DateView, DateDetailView):
+    pass
+
+
+class {{ obj.model_name }}DayArchiveView({{ obj.model_name }}DateView, {{ obj.model_name }}BaseListView, DayArchiveView):
+    pass
+
+
+class {{ obj.model_name }}WeekArchiveView({{ obj.model_name }}DateView, {{ obj.model_name }}BaseListView, WeekArchiveView):
+    pass
+
+
+class {{ obj.model_name }}MonthArchiveView({{ obj.model_name }}DateView, {{ obj.model_name }}BaseListView, MonthArchiveView):
+    pass
+
+
+class {{ obj.model_name }}YearArchiveView({{ obj.model_name }}DateView, {{ obj.model_name }}BaseListView, YearArchiveView):
+    make_object_list = True
+
+
+class {{ obj.model_name }}TodayArchiveView({{ obj.model_name }}DateView, {{ obj.model_name }}BaseListView, TodayArchiveView):
+    pass
+{% endif %}
+{% endfor %}

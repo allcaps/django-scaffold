@@ -1,0 +1,13 @@
+from django.core.urlresolvers import reverse
+from django.template.defaultfilters import slugify
+
+
+class URLMixin(object):
+
+    @property
+    def model_slug(self):
+        class_name = self._meta.concrete_model.__name__
+        return slugify(class_name)
+
+    def get_absolute_url(self):
+        return reverse('webapp:{}_update'.format(self.model_slug), args=(self.pk,))

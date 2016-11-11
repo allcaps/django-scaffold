@@ -1,0 +1,97 @@
+{% templatetag openblock %} load static i18n webapp_tags {% templatetag closeblock %}
+
+<html>
+<head>
+    <title>
+        {% templatetag openblock %} block title {% templatetag closeblock %}{% templatetag openblock %} endblock {% templatetag closeblock %} Project title
+    </title>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="{% templatetag openblock %} static 'webapp/favicon.ico' {% templatetag closeblock %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content=Connection Systems>
+    <link rel="stylesheet" type="text/css" href="{% templatetag openblock %} static 'webapp/bootstrap.css' {% templatetag closeblock %}">
+    <link rel="stylesheet" type="text/css" href="{% templatetag openblock %} static 'webapp/styles.css' {% templatetag closeblock %}">
+
+</head>
+<body>
+    <div id="content">
+        <div class="appContainer">
+            <div class="sidebar">
+                <div class="logo_wrapper">
+                    <div class="logo">
+                        <a class="" href="/">{{ items.0.app_name }}</a>
+                    </div>
+                </div>
+                <nav class="menu">
+                    <ul>
+                        {% templatetag openblock %} for obj in menu {% templatetag closeblock %}
+                        <li role="presentation" class="{% templatetag openblock %} is_active obj.url {% templatetag closeblock %}">
+                            <a href="{% verbatim %}{{  obj.url }}{% endverbatim %}">
+                                <i class="icon fa {% verbatim %}{{ obj.icon }}{% endverbatim %}"></i>
+                                <span> {% verbatim %}{{ obj.title }}{% endverbatim %}</span>
+                            </a>
+                        </li>
+                        {% templatetag openblock %} endfor {% templatetag closeblock %}
+                    </ul>
+                </nav>
+            </div>
+            <main>
+                <div>
+                    <div class="topbar">
+                        <section class="navigation">
+                            {% templatetag openblock %} block back {% templatetag closeblock %}
+                                <a class="backlink" href="{% templatetag openblock %} url 'webapp:index' {% templatetag closeblock %}">
+                                    <i class="fa fa-arrow-left"></i><span>Dashboard</span>
+                                </a>
+                            {% templatetag openblock %} endblock back {% templatetag closeblock %}
+                        </section>
+                        <section>
+                            <div class="usermenu">
+                                <ul class="nav nav-pills">
+                                    <li class="notifications">
+                                        <a href="#">
+                                            <i class="fa fa-bell"></i>
+                                            <div class="badge badge">3</div>
+                                        </a>
+                                    </li>
+                                    <li tabindex="-1" class="user dropdown">
+                                        <a id="nav-dropdown" class="dropdown-toggle" type="button" aria-haspopup="true" aria-expanded="false" href=""><span>
+                                            <div class="avatar"><img src="{% templatetag openblock %} static 'webapp/avatar.jpg' {% templatetag closeblock %}"></div><span>coen</span></span><span><span> </span><span class="caret"></span></span></a>
+                                        <ul class="user dropdown-menu user dropdown-menu-right" role="menu" aria-labelledby="nav-dropdown">
+                                            <li role="presentation" class=""><a href="" title="Item">Uitloggen</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </section>
+                    </div>
+
+                    <div class="container">
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="pull-right">
+                                    {% templatetag openblock %} block buttons {% templatetag closeblock %}
+                                    {% templatetag openblock %} endblock buttons {% templatetag closeblock %}
+                                </div>
+                                <div class="page-title">
+                                    <h1>
+                                        {% templatetag openblock %} block header {% templatetag closeblock %}
+                                        {% templatetag openblock %} endblock header {% templatetag closeblock %}
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            {% templatetag openblock %} block content {% templatetag closeblock %}
+                            {% templatetag openblock %} endblock content {% templatetag closeblock %}
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+</html>

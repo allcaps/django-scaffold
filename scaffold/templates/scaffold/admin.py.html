@@ -1,0 +1,111 @@
+{% load scaffold_tags %}{% emptylineless %}
+from django.contrib import admin
+from .models import (
+    {% for obj in items %}
+    {{ obj.model_name }},
+    {% endfor %}
+)
+{% endemptylineless %}
+
+#
+# Inlines
+#
+
+{% for obj in items %}
+class {{ obj.model_name }}Inline(admin.TabularInline):
+    model = {{ obj.model_name }}
+    extra = 0
+
+{% endfor %}
+
+#
+# Customised Inlines
+#
+
+# TODO: Add customised inlines.
+
+
+#
+# ModelAdmins
+#
+
+{% for obj in items %}
+class {{ obj.model_name }}Admin(admin.ModelAdmin):
+{% emptylineless %}
+
+    {# date_hierarchy #}
+    {% for date_field in obj.date_fields %}
+        {% if forloop.first %}
+    date_hierarchy = '{{ date_field }}'
+        {% else %}
+    # date_hierarchy = '{{ date_field }}'
+        {% endif %}
+    {% endfor %}
+
+    {# search_fields #}
+    {% if obj.text_fields %}
+    search_fields = [
+        {% for field in obj.text_fields %}
+        '{{ field }}',
+        {% endfor %}
+    ]
+    {% endif %}
+
+    {# list_display #}
+    list_display = [
+    {% for field in obj.concrete_fields %}
+        '{{ field }}',
+    {% empty %}
+        {# Fallback to the id #}
+        'id',
+    {% endfor %}
+    ]
+
+    {% if obj.related_fields %}
+    list_filter = [
+    {% for field in obj.related_fields %}
+        '{{ field }}',
+    {% endfor %}
+    ]
+    {% endif %}
+
+    {# filter_horizontal #}
+    {% if obj.many_to_many_fields %}
+    filter_horizontal = [
+        {% for field in obj.many_to_many_fields %}
+        '{{ field }}',
+        {% endfor %}
+    ]
+    {% endif %}
+
+    {# inlines #}
+    {% if obj.releated_with_models %}
+    inlines = [
+        {% for model_name in obj.releated_with_models %}
+        # {{ obj.modelName }}{{ model_name }}Inline,
+        {% endfor %}
+    ]
+    {% endif %}
+
+    fieldsets = (
+        (None, {
+            'classes': (
+                'wide',
+                'extrapretty'
+            ),
+            'fields': (
+                {% for field in obj.concrete_fields %}
+                '{{ field }}',
+                {% endfor %}
+            )
+        }),
+    )
+{% endemptylineless %}
+
+{% endfor %}
+
+#
+# Register
+#
+{% for obj in items %}
+admin.site.register({{ obj.model_name }}, {{ obj.model_name }}Admin){% endfor %}

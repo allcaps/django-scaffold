@@ -1,0 +1,18 @@
+{% templatetag openblock %} extends '{{ app_name }}/{{ model_slug }}_base.html' {% templatetag closeblock %}
+
+{% templatetag openblock %} load i18n static {% templatetag closeblock %}
+
+{% templatetag openblock %} block back {% templatetag closeblock %}
+    <a href="{% templatetag openblock %} url '{{ app_name }}:index' {% templatetag closeblock %}" class="backlink" >
+        <i class="fa fa-arrow-left"></i><span>{% templatetag openblock %} trans 'Dashboard' {% templatetag closeblock %}</span>
+    </a>
+{% templatetag openblock %} endblock back {% templatetag closeblock %}
+
+{% templatetag openblock %} block header {% templatetag closeblock %}
+    {% templatetag openblock %} trans "{{ verbose_name|title }} List" {% templatetag closeblock %}
+{% templatetag openblock %} endblock header {% templatetag closeblock %}
+
+{% templatetag openblock %} block content {% templatetag closeblock %}
+    {% templatetag openblock %} include '{{ app_name }}/{{ model_slug }}_table_list.html' {% templatetag closeblock %}
+    {% templatetag openblock %} include '{{ app_name }}/pagination.html' {% templatetag closeblock %}
+{% templatetag openblock %} endblock {% templatetag closeblock %}

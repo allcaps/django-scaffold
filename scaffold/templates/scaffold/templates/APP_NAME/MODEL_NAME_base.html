@@ -1,0 +1,22 @@
+{% load i18n %}
+
+{% templatetag openblock %} extends 'base.html' {% templatetag closeblock %}
+{% templatetag openblock %} load i18n static%}
+
+{% templatetag openblock %} block back {% templatetag closeblock %} 
+  <a href="{% templatetag openblock %} url '{{ app_name }}:{{ model_slug }}_list' {% templatetag closeblock %}" class="backlink" >
+    <i class="fa fa-arrow-left"></i><span>{% templatetag openblock %} trans "{{ verbose_name|title }} List" {% templatetag closeblock %} </span>
+  </a>
+{% templatetag openblock %} endblock back {% templatetag closeblock %} 
+
+
+{% templatetag openblock %} block header {% templatetag closeblock %} 
+    {% templatetag openblock %} trans "{{ verbose_name|title }}" {% templatetag closeblock %}
+{% templatetag openblock %} endblock {% templatetag closeblock %} 
+
+
+{% templatetag openblock %} block buttons {% templatetag closeblock %} 
+    <a class="btn btn-primary" href="{% templatetag openblock %} url '{{ app_name }}:{{ model_slug }}_create' {% templatetag closeblock %}">
+        {% templatetag openblock %} trans "Create {{ verbose_name|title }}" {% templatetag closeblock %}
+    </a>
+{% templatetag openblock %} endblock {% templatetag closeblock %} 

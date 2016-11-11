@@ -1,0 +1,66 @@
+{% load i18n %}
+
+{% templatetag openblock %} extends "{{ app_name }}/{{ model_slug }}_base.html" {% templatetag closeblock %}
+
+{% templatetag openblock %} load i18n static{% templatetag closeblock %}
+
+{% if is_timestamped %}
+{% templatetag openblock %} block breadcrumbs {% templatetag closeblock %}
+  <ul class="breadcrumb">
+    <li>
+      <a href="{% templatetag openblock %} url '{{ app_name }}:{{ model_slug }}_archive_index' {% templatetag closeblock %}">
+        {% templatetag openblock %} trans "Archive Index" {% templatetag closeblock %}
+      </a>
+      <span class="divider">
+        /
+      </span>
+    </li>
+    <li>
+      <a href="{% templatetag openblock %} url '{{ app_name }}:{{ model_slug }}_year_archive' year=object.{{ timestamp_field }}.year {% templatetag closeblock %}">
+        {% templatetag openblock %} trans "Year Archive" {% templatetag closeblock %}
+      </a>
+      <span class="divider">
+        /
+      </span>
+    </li>
+    <li>
+      <a href="{% templatetag openblock %} url '{{ app_name }}:{{ model_slug }}_month_archive' year=object.{{ timestamp_field }}.year month=object.{{ timestamp_field }}.month {% templatetag closeblock %}">
+        {% templatetag openblock %} trans "Month Archive" {% templatetag closeblock %}
+      </a>
+      <span class="divider">
+        /
+      </span>
+    </li>
+    <li>
+      <a href="{% templatetag openblock %} url '{{ app_name }}:{{ model_slug }}_day_archive' year=object.{{ timestamp_field }}.year month=object.{{ timestamp_field }}.month day=object.{{ timestamp_field }}.day {% templatetag closeblock %}">
+        {% templatetag openblock %} trans "Day Archive" {% templatetag closeblock %}
+      </a>
+      <span class="divider">
+        /
+      </span>
+    </li>
+    <li>
+      <a href="{% templatetag openblock %} url '{{ app_name }}:{{ model_slug }}_date_detail' year=object.{{ timestamp_field }}.year month=object.{{ timestamp_field }}.month day=object.{{ timestamp_field }}.day pk=object.pk {% templatetag closeblock %}">
+        {% templatetag openblock %} trans "Date Detail" {% templatetag closeblock %}
+      </a>
+    </li>
+  </ul>
+{% templatetag openblock %} endblock {% templatetag closeblock %}
+{% endif %}
+
+{% templatetag openblock %} block content {% templatetag closeblock %}
+  {% templatetag openblock %} include "{{ app_name }}/{{ model_slug }}_table_detail.html" {% templatetag closeblock %}
+  <form action="{% templatetag openblock %} url '{{ app_name }}:{{ model_slug }}_delete' pk=object.pk {% templatetag closeblock %}" charset="utf-8" method="post">
+    <fieldset>
+      {% templatetag openblock %} csrf_token {% templatetag closeblock %}
+      <div class="form-actions">
+        <a class="btn btn-success" href="{% templatetag openblock %} url '{{ app_name }}:{{ model_slug }}_update' pk=object.pk {% templatetag closeblock %}">
+          {% templatetag openblock %} trans "Update" {% templatetag closeblock %}
+        </a>
+        <button class="btn btn-danger" type="submit">
+          {% templatetag openblock %} trans "{% trans 'Delete' %}" {% templatetag closeblock %}
+        </button>
+      </div>
+    </fieldset>
+  </form>
+{% templatetag openblock %} endblock {% templatetag closeblock %}

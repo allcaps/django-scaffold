@@ -1,0 +1,132 @@
+{% load scaffold_tags %}{% emptylineless %}
+from django.conf import settings
+from django.conf.urls.static import static
+from django.contrib import admin
+from django.views.generic import TemplateView
+from django.conf.urls import url
+from views import (
+    IndexView,
+    {% for obj in items %}
+    {{ obj.model_name }}CreateView,
+    {{ obj.model_name }}DeleteView,
+    {{ obj.model_name }}DetailView,
+    {{ obj.model_name }}ListView,
+    {{ obj.model_name }}UpdateView,
+        {% if obj.date_fields %}
+    {{ obj.model_name }}ArchiveIndexView,
+    {{ obj.model_name }}DateDetailView,
+    {{ obj.model_name }}DayArchiveView,
+    {{ obj.model_name }}MonthArchiveView,
+    {{ obj.model_name }}TodayArchiveView,
+    {{ obj.model_name }}WeekArchiveView,
+    {{ obj.model_name }}YearArchiveView,
+        {% endif %}
+    {% endfor %}
+)
+{% endemptylineless %}
+
+urlpatterns = [
+    url(
+        r'^admin/',
+        admin.site.urls
+    ),
+    url(
+        r'^$',
+        IndexView.as_view(),
+        name='index'
+    ),
+]
+
+{% emptylineless %}
+urlpatterns += [
+{% for obj in items %}
+    url(
+        r'^{{ obj.slug }}/create/$',
+        {{ obj.model_name }}CreateView.as_view(),
+        name='{{ obj.url_name }}_create'
+    ),
+    url(
+        r'^{{ obj.slug }}/(?P<pk>\d+?)/delete/$',
+        {{ obj.model_name }}DeleteView.as_view(),
+        name='{{ obj.url_name }}_delete'
+    ),
+    url(
+        r'^{{ obj.slug }}/(?P<pk>\d+?)/$',
+        {{ obj.model_name }}DetailView.as_view(),
+        name='{{ obj.url_name }}_detail'
+    ),
+    url(
+        r'^{{ obj.slug }}/$',
+        {{ obj.model_name }}ListView.as_view(),
+        name='{{ obj.url_name }}_list'
+    ),
+    url(
+        r'^{{ obj.slug }}/(?P<pk>\d+?)/update/$',
+        {{ obj.model_name }}UpdateView.as_view(),
+        name='{{ obj.url_name }}_update'
+    ),
+    {% if obj.date_fields %}
+    url(
+        r'^devicelocation/archive/$',
+        {{ obj.model_name }}ArchiveIndexView.as_view(),
+        name='{{ obj.url_name }}_archive_index'
+    ),
+    url(
+        r'^{{ obj.slug }}/(?P<year>\d{4})/'
+               '(?P<month>\d{1,2})/'
+               '(?P<day>\d{1,2})/'
+               '(?P<pk>\d+?)/$',
+        {{ obj.model_name }}DateDetailView.as_view(),
+        name='{{ obj.url_name }}_date_detail'
+    ),
+    url(
+        r'^{{ obj.slug }}/archive/(?P<year>\d{4})/'
+               '(?P<month>\d{1,2})/'
+               '(?P<day>\d{1,2})/$',
+        {{ obj.model_name }}DayArchiveView.as_view(),
+        name='{{ obj.url_name }}_day_archive'
+    ),
+    url(
+        r'^{{ obj.slug }}/archive/(?P<year>\d{4})/'
+               '(?P<month>\d{1,2})/$',
+        {{ obj.model_name }}MonthArchiveView.as_view(),
+        name='{{ obj.url_name }}_month_archive'
+    ),
+    url(
+        r'^{{ obj.slug }}/today/$',
+        {{ obj.model_name }}TodayArchiveView.as_view(),
+        name='{{ obj.url_name }}_today_archive'
+    ),
+    url(
+        r'^{{ obj.slug }}/archive/(?P<year>\d{4})/'
+               '(?P<month>\d{1,2})/'
+               'week/(?P<week>\d{1,2})/$',
+        {{ obj.model_name }}WeekArchiveView.as_view(),
+        name='{{ obj.url_name }}_week_archive'
+    ),
+    url(
+        r'^{{ obj.slug }}/archive/(?P<year>\d{4})/$',
+        {{ obj.model_name }}YearArchiveView.as_view(),
+        name='{{ obj.url_name }}_year_archive'
+    ),
+    {% endif %}
+{% endfor %}
+]
+{% endemptylineless %}
+
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+if settings.DEBUG:
+    # During development we want to be able to see the 404 and 500 page.
+    from django.views.defaults import server_error
+    urlpatterns += [
+        url(
+            r'^500/$',
+            server_error
+        ),
+        url(
+            r'^404/$',
+            TemplateView.as_view(template_name='404.html')
+        ),
+    ]

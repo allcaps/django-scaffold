@@ -1,0 +1,37 @@
+from django.conf import settings
+from django.contrib.sites.models import Site
+from django.core.urlresolvers import reverse
+
+{% load scaffold_tags %}{% emptylineless %}
+def base(request):
+    current_site = Site.objects.get(pk=settings.SITE_ID)
+    use_https = settings.USE_HTTPS
+    context = {
+        'site': current_site,
+        'protocol': 'https' if use_https else 'http',
+        'menu': [
+            # fa-tachometer
+            # fa-folder
+            # fa-building
+            # fa-child
+            # fa-cogs
+            # fa-ambulance
+            # fa-clock-o
+            # fa-book
+            # fa-paint-brush
+            {
+                'title': 'Dashboard',
+                'url': reverse('webapp:index'),
+                'icon': 'fa-tachometer',
+            },
+{% for obj in items %}
+            {
+                'title': '{{ obj.verbose_plural|title }}',
+                'url': reverse('webapp:{{ obj.url_name }}_list'),
+                'icon': 'fa-folder',
+            },
+{% endfor %}
+        ]
+    }
+    return context
+{% endemptylineless %}
