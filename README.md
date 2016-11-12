@@ -37,7 +37,7 @@ After the build
 
     SITE_ID = 1
 
-    TEMPLATES['OPTIONS']['context_processors'] += ['webapp.context_processors.base']
+    TEMPLATES[0]['OPTIONS']['context_processors'] += ['webapp.context_processors.base']
 
     STATIC_URL = '/static/'
     STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
