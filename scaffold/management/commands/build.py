@@ -44,20 +44,24 @@ class BaseGenerator(object):
             data = template.render(self.context)
             destination = self.get_destination(template_name, app_name=self.context['app_name'])
             with open(destination, 'w') as out:
-                out.write(data)
-                logger.info("Write %s", destination)
+                out.write(data.encode('utf-8'))
+                logger.info(u"Write %s", destination)
 
 
 class SingleFileGenerator(BaseGenerator):
     """SingeFileGenerator uses the complete context (all models) per template."""
     template_names = [
         'scaffold/admin.py.html',
+        'scaffold/context_processors.py.html',
+        'scaffold/model_mixins.py.html',
+        'scaffold/static/APP_NAME/styles.css',
+        'scaffold/templates/APP_NAME/index.html',
+        'scaffold/templates/APP_NAME/pagination.html',
+        'scaffold/templates/base.html',
+        'scaffold/templatetags/__init__.py',
+        'scaffold/templatetags/APP_NAME_tags.py',
         'scaffold/urls.py.html',
         'scaffold/views.py.html',
-        'scaffold/model_mixins.py.html',
-        'scaffold/context_processors.py.html',
-        'scaffold/templates/base.html',
-        'scaffold/templates/APP_NAME/pagination.html',
     ]
 
 
@@ -115,9 +119,16 @@ class Command(BaseCommand):
 
     def get_concrete_fields(self, model):
         """All model fields, like get_fields but NO backward related fields."""
-        fields = [field for field in self.get_fields(model) if field not in self.get_related_fields(model)]
-        fields.remove('id')
-        return fields
+        fields = [
+                (f, f.model if f.model != model else None)
+                for f in model._meta.get_fields()
+                if f.concrete and (
+                    not f.is_relation
+                    or f.one_to_one
+                    or (f.many_to_one and f.related_model)
+                )
+            ]
+        return [field.name for field, model in fields]
 
     def get_related_fields(self, model):
         """Related fields like ForeignKey, OneToOne fields."""
@@ -171,25 +182,26 @@ class Command(BaseCommand):
         context = {'items': [], 'app_name': app_name}
         all_models = apps.all_models[app_name]
         for name, model in all_models.iteritems():
-            context['items'].append({
-                'app_name': app_name,
-                'model': model,
-                'model_name': model.__name__,
-                'url_name': slugify(model._meta.verbose_name).replace('-', ''),
-                'model_slug': slugify(model._meta.verbose_name).replace('-', ''),
-                'verbose_name': model._meta.verbose_name,
-                'verbose_plural': model._meta.verbose_name,
-                'table_name': model._meta.db_table,
-                'slug': slugify(model._meta.verbose_name),
-                'slug_plural': slugify(model._meta.verbose_name),
-                'fields': self.get_fields(model),
-                'concrete_fields': self.get_concrete_fields(model),
-                'related_fields': self.get_related_fields(model),
-                'many_to_many_fields': self.get_many_to_many_fields(model),
-                'date_fields': self.get_date_fields(model),
-                'text_fields': self.get_text_fields(model),
-                'releated_with_models': self.get_related_with_models(model),
-            })
+            if "_" not in name:  # Django auto generated cross tables do have `_`. Exclude them.
+                context['items'].append({
+                    'app_name': app_name,
+                    'model': model,
+                    'model_name': model.__name__,
+                    'url_name': slugify(model._meta.verbose_name).replace('-', ''),
+                    'model_slug': slugify(model._meta.verbose_name).replace('-', ''),
+                    'verbose_name': model._meta.verbose_name,
+                    'verbose_plural': model._meta.verbose_name,
+                    'table_name': model._meta.db_table,
+                    'slug': slugify(model._meta.verbose_name),
+                    'slug_plural': slugify(model._meta.verbose_name),
+                    'fields': self.get_fields(model),
+                    'concrete_fields': self.get_concrete_fields(model),
+                    'related_fields': self.get_related_fields(model),
+                    'many_to_many_fields': self.get_many_to_many_fields(model),
+                    'date_fields': self.get_date_fields(model),
+                    'text_fields': self.get_text_fields(model),
+                    'releated_with_models': self.get_related_with_models(model),
+                })
 
         logger.info(context)
         print(context)
