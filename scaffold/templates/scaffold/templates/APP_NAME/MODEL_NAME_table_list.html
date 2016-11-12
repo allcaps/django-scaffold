@@ -43,7 +43,7 @@
                         <td class="col-btn">
                             <div class="btn-group">
                                 <a type="button" class="btn btn-default btn-sm" href="{% templatetag openvariable %} object.get_absolute_url {% templatetag closevariable %}">
-                                    Bewerken
+                                    {% templatetag openblock %} trans 'Edit' {% templatetag closeblock %}
                                 </a>
                             </div>
                         </td>

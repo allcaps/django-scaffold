@@ -25,7 +25,7 @@ from models import (
 
 
 class IndexView(TemplateView):
-    template_name = "webapp/index.html"
+    template_name = "{{ app_name }}/index.html"
 
 
 # {{ obj.model_name }} generic (crud) views
@@ -49,7 +49,7 @@ class {{ obj.model_name }}CreateView({{ obj.model_name }}Mixin, CreateView):
 {% endemptylineless %}
 
     def get_success_url(self):
-        return reverse('webapp:{{ obj.url_name }}_list')
+        return reverse('{{ app_name }}:{{ obj.url_name }}_list')
 
 
 class {{ obj.model_name }}DetailView({{ obj.model_name }}Mixin, DetailView):
@@ -70,12 +70,12 @@ class {{ obj.model_name }}UpdateView({{ obj.model_name }}Mixin, UpdateView):
 {% endemptylineless %}
 
     def get_success_url(self):
-        return reverse('webapp:{{ obj.url_name }}_list')
+        return reverse('{{ app_name }}:{{ obj.url_name }}_list')
 
 
 class {{ obj.model_name }}DeleteView({{ obj.model_name }}Mixin, DeleteView):
     def get_success_url(self):
-        return reverse('webapp:{{ obj.url_name }}_list')
+        return reverse('{{ app_name }}:{{ obj.url_name }}_list')
 
 
 # {{ obj.model_name }} generic dates

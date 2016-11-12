@@ -1,4 +1,4 @@
-{% templatetag openblock %} load static i18n webapp_tags {% templatetag closeblock %}
+{% templatetag openblock %} load static i18n {{ app_name }}_tags {% templatetag closeblock %}
 
 <html>
 <head>
@@ -6,11 +6,11 @@
         {% templatetag openblock %} block title {% templatetag closeblock %}{% templatetag openblock %} endblock {% templatetag closeblock %} Project title
     </title>
     <meta charset="utf-8">
-    <link rel="shortcut icon" href="{% templatetag openblock %} static 'webapp/favicon.ico' {% templatetag closeblock %}">
+    <link rel="shortcut icon" href="{% templatetag openblock %} static '{{ app_name }}/favicon.ico' {% templatetag closeblock %}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content=Connection Systems>
-    <link rel="stylesheet" type="text/css" href="{% templatetag openblock %} static 'webapp/bootstrap.css' {% templatetag closeblock %}">
-    <link rel="stylesheet" type="text/css" href="{% templatetag openblock %} static 'webapp/styles.css' {% templatetag closeblock %}">
+    <link rel="stylesheet" type="text/css" href="{% templatetag openblock %} static '{{ app_name }}/bootstrap.css' {% templatetag closeblock %}">
+    <link rel="stylesheet" type="text/css" href="{% templatetag openblock %} static '{{ app_name }}/styles.css' {% templatetag closeblock %}">
 
 </head>
 <body>
@@ -40,27 +40,21 @@
                     <div class="topbar">
                         <section class="navigation">
                             {% templatetag openblock %} block back {% templatetag closeblock %}
-                                <a class="backlink" href="{% templatetag openblock %} url 'webapp:index' {% templatetag closeblock %}">
-                                    <i class="fa fa-arrow-left"></i><span>Dashboard</span>
+                                <a class="backlink" href="{% templatetag openblock %} url '{{ app_name }}:index' {% templatetag closeblock %}">
+                                    <i class="fa fa-arrow-left"></i><span>{% templatetag openblock %} trans 'Index' {% templatetag closeblock %}</span>
                                 </a>
                             {% templatetag openblock %} endblock back {% templatetag closeblock %}
                         </section>
                         <section>
                             <div class="usermenu">
                                 <ul class="nav nav-pills">
-                                    <li class="notifications">
-                                        <a href="#">
-                                            <i class="fa fa-bell"></i>
-                                            <div class="badge badge">3</div>
-                                        </a>
-                                    </li>
-                                    <li tabindex="-1" class="user dropdown">
-                                        <a id="nav-dropdown" class="dropdown-toggle" type="button" aria-haspopup="true" aria-expanded="false" href=""><span>
-                                            <div class="avatar"><img src="{% templatetag openblock %} static 'webapp/avatar.jpg' {% templatetag closeblock %}"></div><span>coen</span></span><span><span> </span><span class="caret"></span></span></a>
-                                        <ul class="user dropdown-menu user dropdown-menu-right" role="menu" aria-labelledby="nav-dropdown">
-                                            <li role="presentation" class=""><a href="" title="Item">Uitloggen</a>
-                                            </li>
-                                        </ul>
+                                    <li>
+                                        {% templatetag openblock %} if user.is_authenticated {% templatetag closeblock %}
+                                            {% templatetag openblock %} trans 'Hello' {% templatetag closeblock %} {% templatetag openvariable %} request.user.username {% templatetag closevariable %}
+                                            <a href="{% templatetag openblock %} url '{{ app_name }}:logout'{% templatetag closeblock %}">{% templatetag openblock %} trans 'logout' {% templatetag closeblock %}</a>
+                                        {% templatetag openblock %} else {% templatetag closeblock %}
+                                            <a href="{% templatetag openblock %} url '{{ app_name }}:login' {% templatetag closeblock %}">{% templatetag openblock %}trans 'login' {% templatetag closeblock %}</a>
+                                        {% templatetag openblock %} endif {% templatetag closeblock %}
                                     </li>
                                 </ul>
                             </div>

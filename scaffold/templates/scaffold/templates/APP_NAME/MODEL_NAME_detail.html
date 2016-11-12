@@ -1,5 +1,3 @@
-{% load i18n %}
-
 {% templatetag openblock %} extends "{{ app_name }}/{{ model_slug }}_base.html" {% templatetag closeblock %}
 
 {% templatetag openblock %} load i18n static{% templatetag closeblock %}
@@ -54,12 +52,12 @@
     <fieldset>
       {% templatetag openblock %} csrf_token {% templatetag closeblock %}
       <div class="form-actions">
-        <a class="btn btn-success" href="{% templatetag openblock %} url '{{ app_name }}:{{ model_slug }}_update' pk=object.pk {% templatetag closeblock %}">
-          {% templatetag openblock %} trans "Update" {% templatetag closeblock %}
+        <a class="btn btn-success" href="{% templatetag openblock %} url '{{ app_name }}:{{ model_slug }}_change' pk=object.pk {% templatetag closeblock %}">
+          {% templatetag openblock %} trans "Change" {% templatetag closeblock %}
         </a>
-        <button class="btn btn-danger" type="submit">
-          {% templatetag openblock %} trans "{% trans 'Delete' %}" {% templatetag closeblock %}
-        </button>
+        <a href="{% templatetag openblock %} url '{{ app_name }}:{{ model_slug }}_delete' pk=object.pk {% templatetag closeblock %}" class="btn btn-large btn-danger">
+          {% templatetag openblock %} trans "Delete" {% templatetag closeblock %}
+        </a>
       </div>
     </fieldset>
   </form>

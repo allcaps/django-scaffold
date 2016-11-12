@@ -3,6 +3,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.generic import TemplateView
+from django.contrib.auth import views as auth_views
 from django.conf.urls import url
 from views import (
     IndexView,
@@ -35,6 +36,16 @@ urlpatterns = [
         IndexView.as_view(),
         name='index'
     ),
+    url(
+        r'^login/$',
+        auth_views.login,
+        name='login'
+    ),
+    url(
+        r'^logout/$',
+        auth_views.logout,
+        name='logout'
+    ),
 ]
 
 {% emptylineless %}
@@ -61,9 +72,9 @@ urlpatterns += [
         name='{{ obj.url_name }}_list'
     ),
     url(
-        r'^{{ obj.slug }}/(?P<pk>\d+?)/update/$',
+        r'^{{ obj.slug }}/(?P<pk>\d+?)/change/$',
         {{ obj.model_name }}UpdateView.as_view(),
-        name='{{ obj.url_name }}_update'
+        name='{{ obj.url_name }}_change'
     ),
     {% if obj.date_fields %}
     url(

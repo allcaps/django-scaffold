@@ -5,7 +5,7 @@
 {% templatetag openblock %} endblock back {% templatetag closeblock %}
 
 {% templatetag openblock %} block header {% templatetag closeblock %}
-    {% templatetag openblock %} trans "Dashboard" {% templatetag closeblock %}
+    {% templatetag openblock %} trans "Index" {% templatetag closeblock %}
 {% templatetag openblock %} endblock {% templatetag closeblock %}
 
 {% templatetag openblock %} block sidebar {% templatetag closeblock %}
@@ -14,15 +14,12 @@
 {% templatetag openblock %} block content {% templatetag closeblock %}
     <div class="row">
         <div class="col-md-12">
-            <a class="btn btn-primary btn-lg">
-                Project toevoegen
+            {% templatetag openblock %} for obj in menu {% templatetag closeblock %}
+            <a href="{% verbatim %}{{  obj.url }}{% endverbatim %}" class="btn btn-primary btn-lg">
+                <i class="icon fa {% verbatim %}{{ obj.icon }}{% endverbatim %}"></i>
+                <span> {% verbatim %}{{ obj.title }}{% endverbatim %}</span>
             </a>
-            <a class="btn btn-primary btn-lg">
-                Contactpersoon toevoegen
-            </a>
-            <a class="btn btn-primary btn-lg">
-                Organisatie toevoegen
-            </a>
+            {% templatetag openblock %} endfor {% templatetag closeblock %}
         </div>
     </div>
 {% templatetag openblock %} endblock content {% templatetag closeblock %}
