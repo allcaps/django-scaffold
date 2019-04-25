@@ -43,7 +43,7 @@ class BaseGenerator(object):
             template = get_template(template_name)
             data = template.render(self.context)
             destination = self.get_destination(template_name, app_name=self.context['app_name'])
-            with open(destination, 'w') as out:
+            with open(destination, 'wb') as out:
                 out.write(data.encode('utf-8'))
                 logger.info(u"Write %s", destination)
 
@@ -181,7 +181,7 @@ class Command(BaseCommand):
         # Build one big context of all models and their fields.
         context = {'items': [], 'app_name': app_name}
         all_models = apps.all_models[app_name]
-        for name, model in all_models.iteritems():
+        for name, model in all_models.items():
             if "_" not in name:  # Django auto generated cross tables do have `_`. Exclude them.
                 context['items'].append({
                     'app_name': app_name,
