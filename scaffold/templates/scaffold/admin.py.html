@@ -30,6 +30,7 @@ class {{ obj.model_name }}Inline(admin.TabularInline):
 #
 
 {% for obj in items %}
+@admin.register({{ obj.model_name }})
 class {{ obj.model_name }}Admin(admin.ModelAdmin):
 {% emptylineless %}
 
@@ -54,7 +55,9 @@ class {{ obj.model_name }}Admin(admin.ModelAdmin):
     {# list_display #}
     list_display = [
     {% for field in obj.concrete_fields %}
+    {% if not field == 'id' %}
         '{{ field }}',
+    {% endif %}
     {% empty %}
         {# Fallback to the id #}
         'id',
@@ -95,7 +98,9 @@ class {{ obj.model_name }}Admin(admin.ModelAdmin):
             ),
             'fields': (
                 {% for field in obj.concrete_fields %}
+                {% if not field == 'id' %}
                 '{{ field }}',
+                {% endif %}
                 {% endfor %}
             )
         }),
@@ -103,9 +108,3 @@ class {{ obj.model_name }}Admin(admin.ModelAdmin):
 {% endemptylineless %}
 
 {% endfor %}
-
-#
-# Register
-#
-{% for obj in items %}
-admin.site.register({{ obj.model_name }}, {{ obj.model_name }}Admin){% endfor %}

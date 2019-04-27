@@ -4,8 +4,8 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.generic import TemplateView
 from django.contrib.auth import views as auth_views
-from django.conf.urls import url
-from views import (
+from django.urls import path
+from .views import (
     IndexView,
     {% for obj in items %}
     {{ obj.model_name }}CreateView,
@@ -27,96 +27,97 @@ from views import (
 {% endemptylineless %}
 
 urlpatterns = [
-    url(
-        r'^admin/',
+    path(
+        r'admin/',
         admin.site.urls
     ),
-    url(
-        r'^$',
+    path(
+        r'$',
         IndexView.as_view(),
         name='index'
     ),
-    url(
-        r'^login/$',
-        auth_views.login,
+    path(
+        r'login/',
+        auth_views.LoginView.as_view(),
         name='login'
     ),
-    url(
-        r'^logout/$',
-        auth_views.logout,
+    path(
+        r'logout/',
+        auth_views.LogoutView.as_view(),
         name='logout'
     ),
 ]
 
+
 {% emptylineless %}
 urlpatterns += [
 {% for obj in items %}
-    url(
-        r'^{{ obj.slug }}/create/$',
+    path(
+        r'{{ obj.slug }}/create/',
         {{ obj.model_name }}CreateView.as_view(),
         name='{{ obj.url_name }}_create'
     ),
-    url(
-        r'^{{ obj.slug }}/(?P<pk>\d+?)/delete/$',
+    path(
+        r'{{ obj.slug }}/<int:pk>/delete/',
         {{ obj.model_name }}DeleteView.as_view(),
         name='{{ obj.url_name }}_delete'
     ),
-    url(
-        r'^{{ obj.slug }}/(?P<pk>\d+?)/$',
+    path(
+        r'{{ obj.slug }}/<int:pk>/',
         {{ obj.model_name }}DetailView.as_view(),
         name='{{ obj.url_name }}_detail'
     ),
-    url(
-        r'^{{ obj.slug }}/$',
+    path(
+        r'{{ obj.slug }}/',
         {{ obj.model_name }}ListView.as_view(),
         name='{{ obj.url_name }}_list'
     ),
-    url(
-        r'^{{ obj.slug }}/(?P<pk>\d+?)/change/$',
+    path(
+        r'{{ obj.slug }}/<int:pk>/change/',
         {{ obj.model_name }}UpdateView.as_view(),
         name='{{ obj.url_name }}_change'
     ),
     {% if obj.date_fields %}
-    url(
-        r'^devicelocation/archive/$',
+    path(
+        r'devicelocation/archive/',
         {{ obj.model_name }}ArchiveIndexView.as_view(),
         name='{{ obj.url_name }}_archive_index'
     ),
-    url(
-        r'^{{ obj.slug }}/(?P<year>\d{4})/'
-               '(?P<month>\d{1,2})/'
-               '(?P<day>\d{1,2})/'
-               '(?P<pk>\d+?)/$',
+    path(
+        r'{{ obj.slug }}/<int:year>/'
+               '<int:month>/'
+               '<int:day>/'
+               '<int:pk>/',
         {{ obj.model_name }}DateDetailView.as_view(),
         name='{{ obj.url_name }}_date_detail'
     ),
-    url(
-        r'^{{ obj.slug }}/archive/(?P<year>\d{4})/'
-               '(?P<month>\d{1,2})/'
-               '(?P<day>\d{1,2})/$',
+    path(
+        r'{{ obj.slug }}/archive/<int:year>/'
+               '<int:month>/'
+               '<int:day>/',
         {{ obj.model_name }}DayArchiveView.as_view(),
         name='{{ obj.url_name }}_day_archive'
     ),
-    url(
-        r'^{{ obj.slug }}/archive/(?P<year>\d{4})/'
-               '(?P<month>\d{1,2})/$',
+    path(
+        r'{{ obj.slug }}/archive/<int:year>/'
+               '<int:month>/',
         {{ obj.model_name }}MonthArchiveView.as_view(),
         name='{{ obj.url_name }}_month_archive'
     ),
-    url(
-        r'^{{ obj.slug }}/today/$',
+    path(
+        r'{{ obj.slug }}/today/',
         {{ obj.model_name }}TodayArchiveView.as_view(),
         name='{{ obj.url_name }}_today_archive'
     ),
-    url(
-        r'^{{ obj.slug }}/archive/(?P<year>\d{4})/'
-               '(?P<month>\d{1,2})/'
-               'week/(?P<week>\d{1,2})/$',
+    path(
+        r'{{ obj.slug }}/archive/<int:year>/'
+               '<int:month>/'
+               'week/<int:week>/',
         {{ obj.model_name }}WeekArchiveView.as_view(),
         name='{{ obj.url_name }}_week_archive'
     ),
-    url(
-        r'^{{ obj.slug }}/archive/(?P<year>\d{4})/$',
+    path(
+        r'{{ obj.slug }}/archive/<int:year>/',
         {{ obj.model_name }}YearArchiveView.as_view(),
         name='{{ obj.url_name }}_year_archive'
     ),
@@ -132,12 +133,12 @@ if settings.DEBUG:
     # During development we want to be able to see the 404 and 500 page.
     from django.views.defaults import server_error
     urlpatterns += [
-        url(
-            r'^500/$',
+        path(
+            r'500/',
             server_error
         ),
-        url(
-            r'^404/$',
+        path(
+            r'404/',
             TemplateView.as_view(template_name='404.html')
         ),
     ]
