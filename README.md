@@ -6,7 +6,7 @@ Django Scaffold provides a build command to inspect models and generate views, u
 Install
 -------
 
-    env/bin/pip install -e git+git@github.com:allcaps/django-scaffold.g#egg=django-scaffold
+    env/bin/pip install -e git+git@github.com:allcaps/django-scaffold.git#egg=django-scaffold
 
 
 Usage
