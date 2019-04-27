@@ -16,7 +16,7 @@ from django.views.generic import (
     YearArchiveView,
 )
 
-from models import (
+from .models import (
 {% for obj in items %}
     {{ obj.model_name }},
 {% endfor %}
